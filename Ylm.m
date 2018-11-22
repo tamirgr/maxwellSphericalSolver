@@ -1,5 +1,5 @@
 function value = Ylm(l, m, th, phi)
-if l>=m
+if l>= abs(m)
     norm = sqrt((2.*l+1)./4./pi./factorial(l+m).*factorial(l-m));
     elev = legendrePlm(l, m, cos(th));
     % azim = cos(m.*phi);

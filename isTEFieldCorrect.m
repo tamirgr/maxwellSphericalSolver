@@ -19,7 +19,7 @@ sphr.z = 0.0;
 x = linspace(-range,range,len);
 y = linspace(-range,range,len);
 z = linspace(-range,range,len);
-l = 1; %l indx1
+l = 2; %l indx1
 n = 1; %n indx2
 m = 1; %m indx3
 sphr.ordersN = 20;
@@ -51,9 +51,11 @@ max(max(max(subth1))), min(min(min(subth1)))]
 
 figure;
 hist(real(xlmTh1(:)),800);
+title('xlmTh.*fnl');
 figure;
 hist(real(xlmTh2(:)),800);
-figure;
-hist(real(xlmPhi1(:)),800);
-figure;
-hist(real(xlmPhi2(:)),800);
+title('TEField');
+% figure;
+% hist(real(xlmPhi1(:)),800);
+% figure;
+% hist(real(xlmPhi2(:)),800);

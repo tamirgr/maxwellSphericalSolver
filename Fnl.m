@@ -2,7 +2,7 @@
 function [value] = Fnl(r,sphr,epiNL,n,l)
 %'a' is the radius of the sphere
 ext = r < sphr.a;
-tmp = ext.*r + sphr.a.*(~ext);
+tmp = r.*ext + sphr.a.*(~ext);
 
 xnl = (sphr.k.*sqrt(epiNL(l+1,n)./sphr.ep)).*tmp;
 % A = normalizationCoeffCalc(sphr,xnl,mode);
