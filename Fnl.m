@@ -4,7 +4,7 @@ function [value] = Fnl(r,sphr,epiNL,n,l)
 ext = r < sphr.a;
 tmp = r.*ext + sphr.a.*(~ext);
 
-xnl = (sphr.k.*sqrt(epiNL(l+1,n)./sphr.ep)).*tmp;
+xnl = (sphr.k.*sqrt(epiNL(l+1,n)./sphr.ep)).*r;
 % A = normalizationCoeffCalc(sphr,xnl,mode);
 
 % A = sqrt(sphr.a./r).*(~ext)./besselh(l+0.5,sphr.k*sphr.a).*besselh(l+0.5,sphr.k.*r) + ext;

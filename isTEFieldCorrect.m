@@ -49,13 +49,15 @@ subth1 = (xlmTh1 - xlmTh2)./xlmTh2;
 subres1 = [max(max(max(subphi1))), min(min(min(subphi1))) ;
 max(max(max(subth1))), min(min(min(subth1)))]
 
-figure;
-hist(real(xlmTh1(:)),800);
-title('xlmTh.*fnl');
-figure;
-hist(real(xlmTh2(:)),800);
-title('TEField');
 % figure;
-% hist(real(xlmPhi1(:)),800);
+% hist(real(xlmTh1(:)),800);
+% title('xlmTh.*fnl');
 % figure;
-% hist(real(xlmPhi2(:)),800);
+% hist(real(xlmTh2(:)),800);
+% title('TEField theta');
+figure;
+hist(real(xlmPhi1(:)),800);
+title('xlmPhi.*fnl');
+figure;
+hist(real(xlmPhi2(:)),800);
+title('TEField phi');
