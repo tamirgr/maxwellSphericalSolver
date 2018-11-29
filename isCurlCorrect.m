@@ -41,7 +41,7 @@ fnl = Fnl(r, sphr, epiNL2, n, l);
 [xlmTh,xlmPhi] = Xlm(th,phi,l, m);
 % coeffIn = 1i/sphr.k/(1-sphr.ep);
 % coeffOut = 1i/sphr.k;
-[cx, cy, cz] = mySph2cart(0,fnl.*xlmTh,fnl.*xlmPhi,th,phi);
+[cx, cy, cz] = mySph2cart(0,xlmTh.*fnl,xlmPhi.*fnl,th,phi);
 % [cx, cy, cz] = sph2cart(0,fnl.*xlmTh,fnl.*xlmPhi);
 % [eRCurl, eThCurl, ePhiCurl]= curl(fnl,xlmTh,xlmPhi);
 % [ex, ey, ez, cav] = curl(X,Y,Z,cx, cy, cz);
@@ -64,6 +64,9 @@ ez = ez.*kz;
 % rsub =   resRIn -  eRCurl;
 % phisub =   resPhiIn -  ePhiCurl;
 % thsub =   resThIn -  eThCurl;
+rsub2 =   (resRIn1 -  resRIn2)./resRIn2;
+phisub2 =   (resPhiIn1 -  resPhiIn2)./resPhiIn2;
+thsub2 =   (resThIn1 -  resThIn2)./resThIn1;
 % xsub = (ex - real(resX))./real(resX);
 % ysub = (ey - real(resY))./real(resY);
 % zsub = (ez - real(resZ))./real(resZ);
@@ -88,9 +91,12 @@ zsub3 = (resZ1 - resZ2)./resZ2;
 % subres2 = [max(max(max(xsub2))), min(min(min(xsub2))) ;
 % max(max(max(ysub2))), min(min(min(ysub2))) ;
 % max(max(max(zsub2))), min(min(min(zsub2)))]
-subres3 = [max(max(max(xsub3))), min(min(min(xsub3))) ;
-max(max(max(ysub3))), min(min(min(ysub3))) ;
-max(max(max(zsub3))), min(min(min(zsub3)))]
+% subres3 = [max(max(max(xsub3))), min(min(min(xsub3))) ;
+% max(max(max(ysub3))), min(min(min(ysub3))) ;
+% max(max(max(zsub3))), min(min(min(zsub3)))]
 % subres4 = [max(max(max(xsub4))), min(min(min(xsub4))) ;
 % max(max(max(ysub4))), min(min(min(ysub4))) ;
 % max(max(max(zsub4))), min(min(min(zsub4)))]
+subres5 = [max(max(max(rsub2))), min(min(min(rsub2))) ;
+max(max(max(phisub2))), min(min(min(phisub2))) ;
+max(max(max(thsub2))), min(min(min(thsub2)))]
