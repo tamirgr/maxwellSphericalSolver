@@ -19,7 +19,7 @@ sphr.z = 0.0;
 x = linspace(-range,range,len);
 y = linspace(-range,range,len);
 z = linspace(-range,range,len);
-l = 1; %l indx1
+l = 2; %l indx1
 n = 1; %n indx2
 m = 1; %m indx3
 sphr.ordersN = 20;
@@ -66,7 +66,7 @@ ez = ez.*kz;
 % thsub =   resThIn -  eThCurl;
 rsub2 =   (resRIn1 -  resRIn2)./resRIn2;
 phisub2 =   (resPhiIn1 -  resPhiIn2)./resPhiIn2;
-thsub2 =   (resThIn1 -  resThIn2)./resThIn1;
+thsub2 =   (resThIn1 -  resThIn2)./resThIn2;
 % xsub = (ex - real(resX))./real(resX);
 % ysub = (ey - real(resY))./real(resY);
 % zsub = (ez - real(resZ))./real(resZ);
@@ -100,3 +100,21 @@ zsub3 = (resZ1 - resZ2)./resZ2;
 subres5 = [max(max(max(rsub2))), min(min(min(rsub2))) ;
 max(max(max(phisub2))), min(min(min(phisub2))) ;
 max(max(max(thsub2))), min(min(min(thsub2)))]
+% figure;
+% hist(real(resRIn1(:)),800);
+% title('resRIn1');
+% figure;
+% hist(real(resRIn2(:)),800);
+% title('resRIn2');
+% figure;
+% hist(real(resPhiIn1(:)),800);
+% title('resPhiIn1');
+% figure;
+% hist(real(resPhiIn2(:)),800);
+% title('resPhiIn2');
+figure;
+hist(real(resThIn1(:)),800);
+title('resThIn1');
+figure;
+hist(real(resThIn2(:)),800);
+title('resThIn2');
