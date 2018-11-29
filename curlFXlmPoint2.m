@@ -26,20 +26,21 @@ end
 
 %% Coefficients
 
-ylmcoeff = sqrt(4*pi/(2*l+1)*factorial(l+m)/factorial(l-m))./ sqrt(l*(l+1));
-% ylmcoeff1 = sqrt(4*pi/(2*l+3)*factorial(l+m+1)/factorial(l-m+1));
-coeff = exp(1i.*m.*phi)./rho;
+ylmcoeff = sqrt(4*pi/(2*l+1)*factorial(l+m)/factorial(l-m));
 
-coefftheta =  coeff;
-coeffphi =  1i.*m.*coeff./sin(th);
+coeff = exp(1i.*m.*phi)./rho;
+coeffang =  coeff.*csc(th);
+
+coefftheta =  -1*coeffang;
+coeffphi =  1i.*m.*coeffang;
 
 coeffsb = (l+1) .* SphericalBesselJ(l,rho) - rho .* SphericalBesselJ(l+1,rho);
 %% calculation
  
-rv = coeff .* SphericalBesselJ(l,rho) * l*(l+1) ./ ylmcoeff .* legendrePlm(l,m,cos(th));
+rv = coeff .* SphericalBesselJ(l,rho) * l * (l+1) ./ ylmcoeff .* legendrePlm(l,m,cos(th));
 
-thetav  = coefftheta ./ ylmcoeff .* (...
-    (l+1) .* cot(th) .* legendrePlm(l,m,cos(th)) + (m-l-1) .* csc(th) .* legendrePlm(l+1,m,cos(th))...
+thetav  = coefftheta .* (...
+    m .* cos(th) ./ ylmcoeff .* legendrePlm(l,m,cos(th)) +  sin(th)./ ylmcoeff .* legendrePlm(l,m+1,cos(th))...
     ) .* coeffsb;
 
 phiv= coeffphi ./ ylmcoeff .* legendrePlm(l,m,cos(th)) .* coeffsb;
