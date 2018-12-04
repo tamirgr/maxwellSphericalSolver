@@ -1,5 +1,4 @@
 function [X,Y,Z] = mySph2cart(rField,thField,phiField,th,phi)
-    %TODO make it shorter
     s1= sin(th);
     s2 = sin(phi);
     c1 = cos(th);
