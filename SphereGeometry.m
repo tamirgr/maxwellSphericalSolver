@@ -9,12 +9,13 @@ classdef SphereGeometry
 
     % field properties
     k@double scalar complex;
+    epm@double scalar complex;
     %phi@double scalar complex;
     %psi@double scalar complex;
 
     % sphere properties
     a@double scalar;
-    %epi@double scalar complex;
+    epi@double scalar complex;
     
     % Sphere coordinates
     x@double scalar; 

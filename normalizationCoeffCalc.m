@@ -24,7 +24,7 @@ norm = sqrt(normA./(elA+elB+elC));
 end
 
 function [res] = calcSquaredBesselIntegral(l, a)
-coeff = pi*a.^(2*l+1)/(2*l+1)^3/(4^l*gamma(l+0.5)^2);
+coeff = pi*a.^(2*l+1)/4^(l+1)*factorial(2*l);
 
 res = coeff * hypergeom([l+0.5,l+1],[l+1.5,l+1.5,2*l+2],-a.^2);
 end
