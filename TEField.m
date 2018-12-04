@@ -5,10 +5,10 @@ coeff = 1i*exp(1i.*m.*phi)./sqrt(l*(l+1)); % result of calculation with normaliz
 plmcoeff = sqrt(4*pi/(2*l+1)*factorial(l+m)/factorial(l-m)); % normalization coefficient for associated legendre ploynomial
 % plmcoeff1 = sqrt(4*pi/(2*l+1)*factorial(l+m+1)/factorial(l-m-1)); % normalization coefficient for associated legendre ploynomial
 
-xlmTh = 1i.*m.*coeff./plmcoeff./sin(th).*legendrePlm(l,m,cos(th)).*SphericalBesselJ(l,rho);
+xlmTh = 1i.*m.*coeff./plmcoeff./sin(th).*legendrePlm(l,m,cos(th)).*SphericalBesselJ(l,rho).*normalizationCoeffCalc(sphr,rho,'E');
 
 xlmPhi = -1*coeff./plmcoeff.*(...
     m.*cot(th).*legendrePlm(l,m,cos(th))...
     +legendrePlm(l,m+1,cos(th))...
-    ).* SphericalBesselJ(l,rho);
+    ).* SphericalBesselJ(l,rho).*normalizationCoeffCalc(sphr,rho,'E');
 end
