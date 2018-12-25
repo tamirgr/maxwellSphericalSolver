@@ -110,7 +110,7 @@ function [res] = curlCheck(x, y, z, epiNL1, sphr,indx1,indx2,indx3,type)
     saveas(3,sprintf('sliceEzRealn%dl%dm%d.fig',indx2,indx1,indx3));
      
     ext = (r<1);
-    [resRIn,resThIn,resPhiIn] = curlFXlmPoint1(r,th,phi,epiNL2,sphr,indx2,indx1,indx3);
+    [resRIn,resThIn,resPhiIn] = curlFXlmPoint2(r,th,phi,epiNL2,sphr,indx2,indx1,indx3);
     [resROut,resThOut,resPhiOut] = curlFXlmPointHenkel2(r,th,phi,epiNL2,sphr,indx2,indx1,indx3);    
     resROut = 1i/sphr.k*(ext.*resRIn/epiNL2(indx1,indx2)*sphr.ep + (~ext).*resROut);
     resThOut = 1i/sphr.k*(ext.*resThIn/epiNL2(indx1,indx2)*sphr.ep + (~ext).*resThOut);

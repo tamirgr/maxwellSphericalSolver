@@ -1,4 +1,4 @@
-function [ res ] = genField( eigenmodes, eigenvals, J, epsinc, epsback, k)
+function [ Ex, Ey, Ez ] = genField( Emx, Emy, Emz, eigenvals, Jx, Jy, Jz, epsinc, epsback, k)
 %genField - calculates the total field as described in the paper 'Generalizing normal mode expansion of electromagnetic Greens tensor to open systems'
 %   eigenmodes - the eigenmodes of the system. |Em>
 %   eigenvals - the corresponding eigenvalues of the system.
@@ -7,13 +7,21 @@ function [ res ] = genField( eigenmodes, eigenvals, J, epsinc, epsback, k)
 %   epsback - the background permittivity 
 
     lenv = length(eigenvals);
-    lenm = length(eigenmodes);
-    if lenv~=lenm
-        res = 0;
+    lenx = length(Emx);
+    leny = length(Emx);
+    lenz = length(Emx);
+    if lenv~=lenx || lenx~=leny || leny~=lenz 
+        Ex = 0;
+        Ey = 0;
+        Ez = 0;
         return
     end
-    eigenmodesBra = ctranspose(eigenmodes); % <Em|
+    emBraJx = ctranspose(Emx)*Jx; % <Em|J> x-direction
+    emBraJy = ctranspose(Emy)*Jy; % <Em|J> y-direction
+    emBraJz = ctranspose(Emz)*Jz; % <Em|J> z-direction
     eps = (epsinc-epsback)./(eigenmodes-epsback)./(eigenmodes-epsinc);
-    res = 1i/k*sum(eps.*eigenmodes).*eigenmodesBra.*J; %|Em><Em|J>
+    Ex = 1i./k.*sum(eps.*Emx)*emBraJx; %|Em><Em|J> x-direction
+    Ey = 1i./k.*sum(eps.*Emy)*emBraJy; %|Em><Em|J> y-direction
+    Ez = 1i./k.*sum(eps.*Emz)*emBraJz; %|Em><Em|J> z-direction
 end
 

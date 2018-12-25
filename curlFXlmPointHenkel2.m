@@ -35,7 +35,7 @@ coefftheta =  -1*coeffang;
 coeffphi =  1i.*m.*coeffang;
 
 coeffsb = (l+1) .* SphericalHankelH1(l,rho) - rho .* SphericalHankelH1(l+1,rho);
-coeffsb = coeffsb.*SphericalBesselJ(l,sphr.k * sqrt(epiNL(l+1,n)/sphr.ep) .* shpr.a)./SphericalHankelH1(l,shpr.a);
+coeffsb = coeffsb.*SphericalBesselJ(l,sphr.k * sqrt(epiNL(l+1,n)/sphr.ep) .* sphr.a)./SphericalHankelH1(l,sphr.a);
 %% calculation
  
 rv = coeff .* SphericalHankelH1(l,rho) * l * (l+1) ./ ylmcoeff .* legendrePlm(l,m,cos(th));
