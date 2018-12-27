@@ -20,6 +20,7 @@ else
     error('element mode in SphereGeometry is used incorrectly. check normalizationCoeffCalc.m');
 end
 
+% norm = 1;
 norm = sqrt(normA./(elA+elB+elC));
 % norm = (elA+elB+elC); %this line is just to debug the value of the integrals.
 end
