@@ -37,7 +37,7 @@ sphr.orders = l;
 [phi,th,r] = cart2sph(X,Y,Z);
 th = pi/2 - th;
 
-fnl = Fnl(r, sphr, epiNL2, n, l);
+fnl = Fnl(r, sphr, epiNL2, n, l,'E');
 [xlmTh,xlmPhi] = Xlm(th,phi,l, m);
 xlmTh1 = xlmTh.*fnl;
 xlmPhi1 = xlmPhi.*fnl;
@@ -49,15 +49,30 @@ subth1 = (xlmTh1 - xlmTh2)./xlmTh2;
 subres1 = [max(max(max(subphi1))), min(min(min(subphi1))) ;
 max(max(max(subth1))), min(min(min(subth1)))]
 
+[ExRot,EyRot,EzRot] = mySph2cart(0,xlmTh2,xlmPhi2,th,phi);
+    
+ExR = real(ExRot);
+EyR = real(EyRot);
+EzR = real(EzRot);
+     
+dispx = [x(floor(len/3)),x(floor(len/3*2))];
+    
 figure;
-hist(real(xlmTh1(:)),800);
-title('xlmTh.*fnl');
-figure;
-hist(real(xlmTh2(:)),800);
-title('TEField theta');
-figure;
-hist(real(xlmPhi1(:)),800);
-title('xlmPhi.*fnl');
-figure;
-hist(real(xlmPhi2(:)),800);
-title('TEField phi');
+slice(X,Y,Z,ExR,dispx,dispx,dispx);
+colorbar();
+shading interp
+title(sprintf('ExReal n=%d, l=%d, m=%d',n,l,m));
+
+
+% figure;
+% hist(real(xlmTh1(:)),800);
+% title('xlmTh.*fnl');
+% figure;
+% hist(real(xlmTh2(:)),800);
+% title('TEField theta');
+% figure;
+% hist(real(xlmPhi1(:)),800);
+% title('xlmPhi.*fnl');
+% figure;
+% hist(real(xlmPhi2(:)),800);
+% title('TEField phi');

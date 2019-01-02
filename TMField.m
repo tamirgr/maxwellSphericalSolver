@@ -1,4 +1,4 @@
-function [xlmTh,xlmPhi] = TEField(r,th,phi,sphr,epiNL,n,l,m)
+function [xlmR,xlmTh,xlmPhi] = TMField(r,th,phi,sphr,epiNL,n,l,m)
 rho = sphr.k * sqrt(epiNL(l+1,n)/sphr.ep) .* r;
 
 coeff = 1i*exp(1i.*m.*phi)./sqrt(l*(l+1)); % result of calculation with normalization coefficient for spherical bessel function
@@ -10,7 +10,7 @@ xlmTh = 1i.*m.*coeff./plmcoeff./sin(th).*legendrePlm(l,m,cos(th)).*normalization
 xlmPhi = -1*coeff./plmcoeff.*(...
     m.*cot(th).*legendrePlm(l,m,cos(th))...
     +legendrePlm(l,m+1,cos(th))...
-    ).*normalizationCoeffCalc(sphr,rho,'M');
+    ).*normalizationCoeffCalc(sphr,rho,'E');
 
 xnl = sphr.k * sphr.a * sqrt(epiNL(l+1,n)/sphr.ep); % 
 coeffJH = SphericalBesselJ(l,xnl)/SphericalHankelH1(l,sphr.k*sphr.a);
