@@ -38,7 +38,7 @@ sphr.orders = l;
 th = pi/2 - th;
 
 % [R,Th,Phi] = TMField(r,th,phi,sphr,epiNL2,n,l,m);
-[R,Th,Phi] = genTMField();
+[R,Th,Phi] = genTEField();
 
 [ExRot,EyRot,EzRot] = mySph2cart(R,Th,Phi,th,phi);
     

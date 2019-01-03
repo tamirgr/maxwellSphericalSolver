@@ -21,7 +21,15 @@ else
 %    alphar = sphr.k * (sphr.ep - epiNL) / sphr.ep * r;
 
 %     A = sqrt(sphr.a./r).*(~ext)./besselh(l+0.5,sphr.k*sphr.a).*besselh(l+0.5,sphr.k.*r) + ext;
-    rho = sphr.k * sqrt(epiNL(l+1,n)/sphr.ep) .* r;
+    rho = sphr.k * sqrt(epiNL(l,n)/sphr.ep) .* r;
+end
+
+%% Input Check
+if l<m
+    rv = 0;
+	thetav = 0;
+    phiv = 0;
+    return
 end
 
 %% Coefficients

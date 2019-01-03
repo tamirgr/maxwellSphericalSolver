@@ -1,8 +1,15 @@
 function [R,Th,Phi] = TMField(r,th,phi,sphr,epiNL,n,l,m)
+%% Input Check
+if l<m
+    R   = 0;
+    Th  = 0;
+    Phi = 0;
+	return
+end
 %% Init
 ext = (r<=sphr.a);
 
-xnl = sphr.k * sphr.a * sqrt(epiNL(l+1,n)/sphr.ep); % 
+xnl = sphr.k * sphr.a * sqrt(epiNL(l,n)/sphr.ep); % 
 coeffJH = SphericalBesselJ(l,xnl)/SphericalHankelH1(l,sphr.k*sphr.a);
 %% Calculation
 [resRIn,resThIn,resPhiIn] = curlFXlmPoint2(r,th,phi,epiNL,sphr,n,l,m);

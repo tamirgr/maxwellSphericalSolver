@@ -9,6 +9,39 @@ function [ Ex, Ey, Ez ] = genTEField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
     %% Init
     len = 60;
     range = 2;
+    if nargin < 6
+        sphr =SphereGeometry;
+
+        % background properties
+        sphr.ep = 1; %sphr.mu = 1.0;
+
+        % field properties
+        sphr.k = 1.0; %sphr.beta = 0.0;
+
+        % sphrinder properties
+        sphr.a = 1.0;
+        %sphr.mui = 1;
+        %sphr.mu = 2;
+
+        % sphrinder coordinates
+        sphr.x = 0.0; sphr.y = 0.0;
+        sphr.z = 0.0;
+
+        L = 10;
+        N = 2;
+
+        sphr.ordersN = N;
+        
+        ExZero = zeros(len,len,len);
+        EyZero = zeros(len,len,len);
+        EzZero = zeros(len,len,len);
+        Jx = ones(len,len,len);
+        Jy = ones(len,len,len);
+        Jz = ones(len,len,len);
+        epsinc = sqrt(1.5);
+        epsback = 1.0;
+    end
+    
     x = linspace(-range,range,len);
     y = linspace(-range,range,len);
     z = linspace(-range,range,len);
@@ -30,23 +63,25 @@ function [ Ex, Ey, Ez ] = genTEField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
     EmTh = X*0;
     EmPhi = Y*0;
     
-    for n=1:N
+    n = N;
+%     for n=1:N
         for l=1:L
 %             for m=-l:l
                 [ETh, EPhi] = TEField(r,th,phi,sphr,epiNL,n,l,m);
-                EmTh  = EmTh  + (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc)*ETh;
-                EmPhi = EmPhi + (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc)*EPhi;
+                epsf = (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc);
+                EmTh  = EmTh  + epsf*ETh;
+                EmPhi = EmPhi + epsf*EPhi;
 %             end
         end
-    end
+%     end
     
     %% Summation over all eigenmodes
    
 	[Emx, Emy, Emz] =  mySph2cart(0,EmTh,EmPhi,th,phi);
 
-	emBraJx = ctranspose(Emx)*Jx; % <Em|J> x-direction
-    emBraJy = ctranspose(Emy)*Jy; % <Em|J> y-direction
-    emBraJz = ctranspose(Emz)*Jz; % <Em|J> z-direction
+	emBraJx = permute(conj(Emx),[2,1,3]).*Jx; % <Em|J> x-direction
+    emBraJy = permute(conj(Emy),[2,1,3]).*Jy; % <Em|J> x-direction
+    emBraJz = permute(conj(Emz),[2,1,3]).*Jz; % <Em|J> x-direction
     Ex = ExZero + 1i./sphr.k.*Emx.*emBraJx; %|Em><Em|J> x-direction
     Ey = EyZero + 1i./sphr.k.*Emy.*emBraJy; %|Em><Em|J> y-direction
     Ez = EzZero + 1i./sphr.k.*Emz.*emBraJz; %|Em><Em|J> z-direction
