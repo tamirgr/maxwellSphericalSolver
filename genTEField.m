@@ -7,7 +7,7 @@ function [ Ex, Ey, Ez ] = genTEField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
 %   epsback - the background permittivity 
 
     %% Init
-    len = 60;
+    len = 40;
     range = 2;
     if nargin < 6
         sphr =SphereGeometry;
@@ -40,6 +40,9 @@ function [ Ex, Ey, Ez ] = genTEField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
         Jz = ones(len,len,len);
         epsinc = sqrt(1.5);
         epsback = 1.0;
+    else
+        l = L;
+        m = M;
     end
     
     x = linspace(-range,range,len);
@@ -50,7 +53,7 @@ function [ Ex, Ey, Ez ] = genTEField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
     th = pi/2 - th;
     
     %% Debug Parameters (Delete section when finished
-     m=2;
+%      m=2;
     
     %% Calculate Eigenmodes and Eigenvalues
 
@@ -63,17 +66,16 @@ function [ Ex, Ey, Ez ] = genTEField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
     EmTh = X*0;
     EmPhi = Y*0;
     
-    n = N;
-%     for n=1:N
-        for l=1:L
+    for n=1:N
+%         for l=1:L
 %             for m=-l:l
                 [ETh, EPhi] = TEField(r,th,phi,sphr,epiNL,n,l,m);
                 epsf = (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc);
                 EmTh  = EmTh  + epsf*ETh;
                 EmPhi = EmPhi + epsf*EPhi;
 %             end
-        end
-%     end
+%         end
+    end
     
     %% Summation over all eigenmodes
    

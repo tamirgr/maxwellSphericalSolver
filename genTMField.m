@@ -1,4 +1,4 @@
-function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc, epsback, sphr, N, L)
+function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc, epsback, sphr, N, L, M)
 %genTEField - calculates the total field as described in the paper 'Generalizing normal mode expansion of electromagnetic Greens tensor to open systems'
 %   Ex, Ey, Ez - the eigenmodes of the system. |Em>
 %   eigenvals - the corresponding eigenvalues of the system.
@@ -6,7 +6,7 @@ function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
 %   epsinc - the inclusion permittivity of the material
 %   epsback - the background permittivity 
     %% Init
-    len = 60;
+    len = 40;
     range = 2;
 
     if nargin < 6
@@ -40,6 +40,9 @@ function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
         Jz = ones(len,len,len);
         epsinc = sqrt(1.5);
         epsback = 1.0;
+    else
+        l = L;
+        m = M;
     end
     
     x = linspace(-range,range,len);
@@ -50,7 +53,7 @@ function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
     th = pi/2 - th;
     
     %% Debug Parameters (Delete section when finished
-     m=2;
+%      m=2;
     
     %% Calculate Eigenmodes and Eigenvalues
 
@@ -64,17 +67,17 @@ function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
     EmPhi = Y*0;
     EmR = Z*0;
     
-    n = N;
-%     for n=1:N
-        for l=1:L
+%     n = N;
+    for n=1:N
+%         for l=1:L
 %             for m=-l:l
                 [ER,ETh, EPhi] = TMField(r,th,phi,sphr,epiNL,n,l,m);
                 EmTh  = EmTh  + (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc)*ETh;
                 EmPhi = EmPhi + (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc)*EPhi;
                 EmR   = EmR   + (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc)*ER;
 %             end
-        end
-%     end
+%         end
+    end
     
     %% Summation over all eigenmodes
    

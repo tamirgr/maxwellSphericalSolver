@@ -20,8 +20,8 @@ x = linspace(-range,range,len);
 y = linspace(-range,range,len);
 z = linspace(-range,range,len);
 l = 2; %l indx1
-n = 2; %n indx2
-m = 1; %m indx3
+n = 10; %n indx2
+m = 2; %m indx3
 sphr.ordersN = 20;
 %sphr.beta = 0.5;
 
@@ -37,8 +37,14 @@ sphr.orders = l;
 [phi,th,r] = cart2sph(X,Y,Z);
 th = pi/2 - th;
 
-% [R,Th,Phi] = TMField(r,th,phi,sphr,epiNL2,n,l,m);
-[R,Th,Phi] = genTEField();
+% [R,Th,Phi] = TEField(r,th,phi,sphr,epiNL2,n,l,m);
+[Jx, Jy, Jz] = genWave(len, range, 'x plane polarized', 0.5, range, sphr.k);
+epsinc = sqrt(1.5);
+epsback = 1.0;
+ExZero = zeros(len,len,len);
+EyZero = zeros(len,len,len);
+EzZero = zeros(len,len,len);
+[R,Th,Phi] = genTEField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc, epsback, sphr, n, l, m);
 
 [ExRot,EyRot,EzRot] = mySph2cart(R,Th,Phi,th,phi);
     

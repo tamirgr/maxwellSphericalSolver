@@ -12,7 +12,7 @@ sphr.a = 1.0;
 %sphr.mu = 2;
 
 % sphrinder coordinates
-len = 60;
+len = 40;
 range = 2;
 sphr.x = 0.0; sphr.y = 0.0;
 sphr.z = 0.0;
@@ -38,7 +38,13 @@ sphr.orders = l;
 th = pi/2 - th;
 
 % [R,Th,Phi] = TMField(r,th,phi,sphr,epiNL2,n,l,m);
-[R,Th,Phi] = genTMField();
+[Jx, Jy, Jz] = genWave(len, range, 'x plane polarized', 0.5, range, sphr.k);
+epsinc = sqrt(1.5);
+epsback = 1.0;
+ExZero = zeros(len,len,len);
+EyZero = zeros(len,len,len);
+EzZero = zeros(len,len,len);
+[R,Th,Phi] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc, epsback, sphr, n, l, m);
 
 [ExRot,EyRot,EzRot] = mySph2cart(R,Th,Phi,th,phi);
     
@@ -53,7 +59,7 @@ colormap('jet');
 slice(X,Y,Z,ExR,dispx,dispx,dispx);
 colorbar();
 shading interp
-% caxis([-0.004    0.004]);
+caxis([-abs(max(max(max(ExR))))    abs(max(max(max(ExR))))]);
 title(sprintf('ExReal n=%d, l=%d, m=%d',n,l,m));
 
 figure;
@@ -61,7 +67,7 @@ colormap('jet');
 slice(X,Y,Z,EyR,dispx,dispx,dispx);
 colorbar();
 shading interp
-% caxis([-0.004    0.004]);
+caxis([-abs(max(max(max(EyR))))    abs(max(max(max(EyR))))]);
 title(sprintf('EyReal n=%d, l=%d, m=%d',n,l,m));
 
 figure;
@@ -69,5 +75,5 @@ colormap('jet');
 slice(X,Y,Z,EzR,dispx,dispx,dispx);
 colorbar();
 shading interp
-% caxis([-0.004    0.004]);
+caxis([-abs(max(max(max(EzR))))    abs(max(max(max(EzR))))]);
 title(sprintf('EzReal n=%d, l=%d, m=%d',n,l,m));
