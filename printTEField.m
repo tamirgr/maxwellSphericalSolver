@@ -12,7 +12,7 @@ sphr.a = 1.0;
 %sphr.mu = 2;
 
 % sphrinder coordinates
-len = 60;
+len = 40;
 range = 2;
 sphr.x = 0.0; sphr.y = 0.0;
 sphr.z = 0.0;

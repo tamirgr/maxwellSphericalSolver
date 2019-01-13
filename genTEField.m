@@ -1,4 +1,4 @@
-function [ Ex, Ey, Ez ] = genTEField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc, epsback, sphr, N, L)
+function [ Ex, Ey, Ez ] = genTEField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc, epsback, sphr, N, L, M)
 %genTEField - calculates the total field as described in the paper 'Generalizing normal mode expansion of electromagnetic Greens tensor to open systems'
 %   Ex, Ey, Ez - the eigenmodes of the system. |Em>
 %   eigenvals - the corresponding eigenvalues of the system.
