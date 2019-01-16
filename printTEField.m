@@ -25,20 +25,13 @@ m = 2; %m indx3
 sphr.ordersN = 20;
 %sphr.beta = 0.5;
 
-% epiNL1 = zeros(l,nmodes);
-epiNL2 = zeros(l,sphr.ordersN);
-for k = 1:10
-    sphr.orders = k;
-%     epiNL1(k,:) = disprootsepi2(sphr, nmodes);
-    epiNL2(k,:) = disprootsepi3(sphr, sphr.ordersN);
-end
 sphr.orders = l; 
 [X,Y,Z] = meshgrid(x,y,z);
 [phi,th,r] = cart2sph(X,Y,Z);
 th = pi/2 - th;
 
 % [R,Th,Phi] = TEField(r,th,phi,sphr,epiNL2,n,l,m);
-[Jx, Jy, Jz] = genWave(len, range, 'x plane polarized', 0.5, range, sphr.k);
+[Jx, Jy, Jz] = genWave(len, range, 'x plane polarized', 1.0, 0.0, sphr.k);
 epsinc = sqrt(1.5);
 epsback = 1.0;
 ExZero = zeros(len,len,len);
@@ -52,14 +45,15 @@ ExR = real(ExRot);
 EyR = real(EyRot);
 EzR = real(EzRot);
      
-dispx = [x(floor(len/3)),x(floor(len/3*2))];
+% dispx = [x(floor(len/3)),x(floor(len/3*2))];
+% dispx = [x(floor(len/3)),x(floor(len/3*2))];
     
 figure;
 colormap('jet');
 slice(X,Y,Z,ExR,dispx,dispx,dispx);
 colorbar();
 shading interp
-% caxis([-0.004    0.004]);
+ caxis([-1    1]*1*10^-12);
 title(sprintf('ExReal n=%d, l=%d, m=%d',n,l,m));
 
 figure;

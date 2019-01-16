@@ -23,6 +23,12 @@ function [ Jx, Jy, Jz] = genWave(len, range, wavetype, E0, Rs, k)
     case 'x plane polarized'
         Ex = E0*exp(1i*cos(th).*(r-Rs)*k);
         Jx = Ex;
+        Jy = Jy*0;
+        Jz = Jz*0;
+    case 'x plane polarized sph co'
+        Jx = E0*exp(1i*cos(th).*(r-Rs)*k).*sin(th).*cos(phi);
+        Jy = E0*exp(1i*cos(th).*(r-Rs)*k).*cos(th).*cos(phi);
+        Jz = -E0*exp(1i*cos(th).*(r-Rs)*k).*sin(phi);
     case 'left circular'
      disp('not implemented yet');
     case 'right circular'

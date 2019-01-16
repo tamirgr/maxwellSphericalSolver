@@ -41,6 +41,7 @@ function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
         epsinc = sqrt(1.5);
         epsback = 1.0;
     else
+    %% Debug Parameters (Delete section when finished
         l = L;
         m = M;
     end
@@ -52,14 +53,11 @@ function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
     [phi,th,r] = cart2sph(X,Y,Z);
     th = pi/2 - th;
     
-    %% Debug Parameters (Delete section when finished
-%      m=2;
-    
     %% Calculate Eigenmodes and Eigenvalues
 
     epiNL = zeros(L,sphr.ordersN);
     for l=1:L
-        sphr.orders = l;
+        sphr.orders = l-1;
         epiNL(l,:) = disprootsepi3(sphr, sphr.ordersN);
     end
     
@@ -72,9 +70,10 @@ function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
 %         for l=1:L
 %             for m=-l:l
                 [ER,ETh, EPhi] = TMField(r,th,phi,sphr,epiNL,n,l,m);
-                EmTh  = EmTh  + (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc)*ETh;
-                EmPhi = EmPhi + (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc)*EPhi;
-                EmR   = EmR   + (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc)*ER;
+                epco = (epsinc-epsback)/(epiNL(l,n)-epsback)/(epiNL(l,n)-epsinc);
+                EmTh  = EmTh  + epco*ETh;
+                EmPhi = EmPhi + epco*EPhi;
+                EmR   = EmR   + epco*ER;
 %             end
 %         end
     end
@@ -83,11 +82,22 @@ function [ Ex, Ey, Ez ] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc
    
 	[Emx, Emy, Emz] =  mySph2cart(EmR,EmTh,EmPhi,th,phi);
 
-	emBraJx = permute(conj(Emx),[2,1,3]).*Jx; % <Em|J> x-direction
-    emBraJy = permute(conj(Emy),[2,1,3]).*Jy; % <Em|J> x-direction
-    emBraJz = permute(conj(Emz),[2,1,3]).*Jz; % <Em|J> x-direction
-    Ex = ExZero + 1i./sphr.k.*Emx.*emBraJx; %|Em><Em|J> x-direction
-    Ey = EyZero + 1i./sphr.k.*Emy.*emBraJy; %|Em><Em|J> y-direction
-    Ez = EzZero + 1i./sphr.k.*Emz.*emBraJz; %|Em><Em|J> z-direction
+	emBraJ = conj(Emx).*Jx + conj(Emy).*Jy + conj(Emz).*Jz; % <Em|J> 
+    
+% 	emBraJx = permute(conj(Emx),[2,1,3]).*Jx; % <Em|J> x-direction
+%     emBraJy = permute(conj(Emy),[2,1,3]).*Jy; % <Em|J> x-direction
+%     emBraJz = permute(conj(Emz),[2,1,3]).*Jz; % <Em|J> x-direction
+%     Ex = ExZero + 1i./sphr.k.*Emx.*emBraJx; %|Em><Em|J> x-direction
+%     Ey = EyZero + 1i./sphr.k.*Emy.*emBraJy; %|Em><Em|J> y-direction
+%     Ez = EzZero + 1i./sphr.k.*Emz.*emBraJz; %|Em><Em|J> z-direction
+%     sizefac = 10*10^4;
+%     Ex = ExZero + 1i./sphr.k.*Emx.*emBraJx.*sizefac; %|Em><Em|J> x-direction
+%     Ey = EyZero + 1i./sphr.k.*Emy.*emBraJy.*sizefac; %|Em><Em|J> y-direction
+%     Ez = EzZero + 1i./sphr.k.*Emz.*emBraJz.*sizefac; %|Em><Em|J> z-direction
+    sizefac = 1;%0*10^4;
+    sizefac0 = 0;%0*10^4;
+    Ex = ExZero*sizefac0 + 1i./sphr.k.*Emx.*emBraJ.*sizefac; %|Em><Em|J> x-direction
+    Ey = EyZero*sizefac0 + 1i./sphr.k.*Emy.*emBraJ.*sizefac; %|Em><Em|J> y-direction
+    Ez = EzZero*sizefac0 + 1i./sphr.k.*Emz.*emBraJ.*sizefac; %|Em><Em|J> z-direction
 end
 

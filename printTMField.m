@@ -19,61 +19,58 @@ sphr.z = 0.0;
 x = linspace(-range,range,len);
 y = linspace(-range,range,len);
 z = linspace(-range,range,len);
-l = 2; %l indx1
-n = 2; %n indx2
-m = 1; %m indx3
+l = 3; %l indx1 relative position in epiNL. subtract 1 for non-epiNL use.
+n = 3; %n indx2
+m = 0; %m indx3
 sphr.ordersN = 20;
 %sphr.beta = 0.5;
 
-% epiNL1 = zeros(l,nmodes);
-epiNL2 = zeros(l,sphr.ordersN);
-for k = 1:10
-    sphr.orders = k;
-%     epiNL1(k,:) = disprootsepi2(sphr, nmodes);
-    epiNL2(k,:) = disprootsepi3(sphr, sphr.ordersN);
-end
-sphr.orders = l; 
+sphr.orders = l-1; 
 [X,Y,Z] = meshgrid(x,y,z);
 [phi,th,r] = cart2sph(X,Y,Z);
 th = pi/2 - th;
 
 % [R,Th,Phi] = TMField(r,th,phi,sphr,epiNL2,n,l,m);
-[Jx, Jy, Jz] = genWave(len, range, 'x plane polarized', 0.5, range, sphr.k);
+[Jx, Jy, Jz] = genWave(len, range, 'x plane polarized', 1.0, 0, sphr.k);
 epsinc = sqrt(1.5);
 epsback = 1.0;
-ExZero = zeros(len,len,len);
-EyZero = zeros(len,len,len);
-EzZero = zeros(len,len,len);
-[R,Th,Phi] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc, epsback, sphr, n, l, m);
-
-[ExRot,EyRot,EzRot] = mySph2cart(R,Th,Phi,th,phi);
+ExZero = 1i./sphr.k.*1.*Jx;
+EyZero = 1i./sphr.k.*1.*Jy;
+EzZero = 1i./sphr.k.*1.*Jz;
+% ExZero = Jx;
+% EyZero = Jy;
+% EzZero = Jz;
+[ExRot,EyRot,EzRot] = genTMField( ExZero, EyZero, EzZero, Jx, Jy, Jz, epsinc, epsback, sphr, sphr.ordersN, l, m);
     
 ExR = real(ExRot);
 EyR = real(EyRot);
 EzR = real(EzRot);
      
-dispx = [x(floor(len/3)),x(floor(len/3*2))];
+% dispx = [x(floor(len/3)),x(floor(len/3*2))];
+dispx = [x(floor(len/2))];
     
 figure;
 colormap('jet');
 slice(X,Y,Z,ExR,dispx,dispx,dispx);
 colorbar();
 shading interp
-caxis([-abs(max(max(max(ExR))))    abs(max(max(max(ExR))))]);
+% caxis([-abs(max(max(max(ExR))))    abs(max(max(max(ExR))))]);
+% caxis([-1    1]*1*10^-6);
 title(sprintf('ExReal n=%d, l=%d, m=%d',n,l,m));
+% alpha(0.5);
 
-figure;
-colormap('jet');
-slice(X,Y,Z,EyR,dispx,dispx,dispx);
-colorbar();
-shading interp
-caxis([-abs(max(max(max(EyR))))    abs(max(max(max(EyR))))]);
-title(sprintf('EyReal n=%d, l=%d, m=%d',n,l,m));
-
-figure;
-colormap('jet');
-slice(X,Y,Z,EzR,dispx,dispx,dispx);
-colorbar();
-shading interp
-caxis([-abs(max(max(max(EzR))))    abs(max(max(max(EzR))))]);
-title(sprintf('EzReal n=%d, l=%d, m=%d',n,l,m));
+% figure;
+% colormap('jet');
+% slice(X,Y,Z,EyR,dispx,dispx,dispx);
+% colorbar();
+% shading interp
+% % caxis([-abs(max(max(max(EyR))))    abs(max(max(max(EyR))))]);
+% title(sprintf('EyReal n=%d, l=%d, m=%d',n,l,m));
+% 
+% figure;
+% colormap('jet');
+% slice(X,Y,Z,EzR,dispx,dispx,dispx);
+% colorbar();
+% shading interp
+% % caxis([-abs(max(max(max(EzR))))    abs(max(max(max(EzR))))]);
+% title(sprintf('EzReal n=%d, l=%d, m=%d',n,l,m));
