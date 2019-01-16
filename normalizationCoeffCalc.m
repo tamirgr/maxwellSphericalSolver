@@ -24,7 +24,15 @@ norm = sqrt(normA./(elA+elB+elC));
 end
 
 function [res] = calcSquaredBesselIntegral(l, a)
-res = trapz(a,forIntegral(a,l));
+
+for i = 1:length(a)
+    for j = 1:length(a)
+        for k = 1:length(a)
+            v= linspace(0,a(i,j,k),100);
+            res = trapz(v,forIntegral(v,l));
+        end
+    end
+end
 %coeff = pi*a.^(2*l+1)/4^(l+1)*factorial(2*l);
 %res = coeff .* 1;%hypergeom([l+0.5,l+1],[l+1.5,l+1.5,2*l+2],-a.^2);
 end
