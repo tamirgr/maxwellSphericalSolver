@@ -19,20 +19,13 @@ else
     error('element mode in SphereGeometry is used incorrectly. check normalizationCoeffCalc.m');
 end
 
+% norm = 1;
 norm = sqrt(normA./(elA+elB+elC));
 % norm = (elA+elB+elC); %this line is just to debug the value of the integrals.
 end
 
 function [res] = calcSquaredBesselIntegral(l, a)
-
-for i = 1:length(a)
-    for j = 1:length(a)
-        for k = 1:length(a)
-            v= linspace(0,a(i,j,k),100);
-            res = trapz(v,forIntegral(v,l));
-        end
-    end
-end
-%coeff = pi*a.^(2*l+1)/4^(l+1)*factorial(2*l);
-%res = coeff .* 1;%hypergeom([l+0.5,l+1],[l+1.5,l+1.5,2*l+2],-a.^2);
+% coeff = pi*a.^(2*l+1)/4^(l+1)*factorial(2*l);
+% res = coeff .* 1;%hypergeom([l+0.5,l+1],[l+1.5,l+1.5,2*l+2],-a.^2);
+res = trapz(a, forIntegral(a,l));
 end

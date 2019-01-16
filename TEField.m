@@ -11,7 +11,7 @@ ext = (r<=sphr.a);
 coeff = 1i*exp(1i.*m.*phi)./sqrt(l*(l+1)); % result of calculation with normalization coefficient for spherical bessel function
 plmcoeff = sqrt(4*pi/(2*l+1)*factorial(l+m)/factorial(l-m)); % normalization coefficient for associated legendre ploynomial
 % plmcoeff1 = sqrt(4*pi/(2*l+1)*factorial(l+m+1)/factorial(l-m-1)); % normalization coefficient for associated legendre ploynomial
-normce = normalizationCoeffCalc(sphr,rho,'E');
+normce = normalizationCoeffCalc(l,sphr,rho,'E');
 %% Calculation
 Th = 1i.*m.*coeff./plmcoeff./sin(th).*legendrePlm(l,m,cos(th)).*normce;
 
