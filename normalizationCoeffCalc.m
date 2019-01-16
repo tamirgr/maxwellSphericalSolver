@@ -1,7 +1,6 @@
-function [norm] = normalizationCoeffCalc(sphr,xnl,mode)
+function [norm] = normalizationCoeffCalc(l,sphr,xnl,mode)
 % normalizationCoeffCalc calculates the value of field coeffiecients A or
 % B.
-l = sphr.orders;
 
 if mode == 'E'
     normA = 2*xnl./sphr.a.^3/pi;
@@ -20,13 +19,12 @@ else
     error('element mode in SphereGeometry is used incorrectly. check normalizationCoeffCalc.m');
 end
 
-% norm = 1;
 norm = sqrt(normA./(elA+elB+elC));
 % norm = (elA+elB+elC); %this line is just to debug the value of the integrals.
 end
 
 function [res] = calcSquaredBesselIntegral(l, a)
-coeff = pi*a.^(2*l+1)/4^(l+1)*factorial(2*l);
-
-res = coeff .* 1;%hypergeom([l+0.5,l+1],[l+1.5,l+1.5,2*l+2],-a.^2);
+res = trapz(a,forIntegral(a,l));
+%coeff = pi*a.^(2*l+1)/4^(l+1)*factorial(2*l);
+%res = coeff .* 1;%hypergeom([l+0.5,l+1],[l+1.5,l+1.5,2*l+2],-a.^2);
 end
