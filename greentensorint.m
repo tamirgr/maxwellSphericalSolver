@@ -1,4 +1,4 @@
-function [valx, valy, valz] = greentensorint(rs, ths, zs, xd, yd, zd, k, inx, iny, inz)
+function [valx, valy, valz] = greentensorint( yd, zd, k, inx, iny, inz)
 
 % integral of volume source with Helmholtz Green's tensor kernel
 % cylindrical domain: midpoint rule

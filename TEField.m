@@ -1,4 +1,5 @@
-function [Th,Phi] = TEField(r,th,phi,sphr,epiNL,n,l,m)
+function [R, Th,Phi] = TEField(r,th,phi,sphr,epiNL,n,l,m)
+R=0;
 %% Input Check
 if l<m
     Th = 0;
