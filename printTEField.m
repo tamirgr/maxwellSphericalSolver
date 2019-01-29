@@ -43,6 +43,6 @@ ExR = real(ExRot);
 EyR = real(EyRot);
 EzR = real(EzRot);
 
-dispx = [x(floor(len/3)),x(floor(len/3*2))];
+dispx = [x(floor(len/2))];
     
 displayFields( ExR , EyR , EzR ,X,Y,Z, n,l,m,dispx);

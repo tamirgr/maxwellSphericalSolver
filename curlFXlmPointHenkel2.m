@@ -2,6 +2,19 @@ function [rv, thetav, phiv] = curlFXlmPointHenkel2(r, th, phi, epiNL, sphr,n,l,m
 % curlFXlmPoint2 calculates the rotor of the multiplication of f_nl times
 % X_lm in a secific coorediante given by r, th and phi.
 % alpha is the permittivity coefficient of the length r.
+%% Input Check
+if l<m
+    rv = 0;
+	thetav = 0;
+    phiv = 0;
+    return
+end
+
+if size(epiNL)>1
+    epi = epiNL(l+1,n);
+else
+    epi = epiNL;
+end
 
 %% Init
 if nargin < 5
@@ -21,16 +34,9 @@ else
 %    alphar = sphr.k * (sphr.ep - epiNL) / sphr.ep * r;
 
 %     A = sqrt(sphr.a./r).*(~ext)./besselh(l+0.5,sphr.k*sphr.a).*besselh(l+0.5,sphr.k.*r) + ext;
-    rho = sphr.k * sqrt(epiNL(l+1,n)/sphr.ep) .* r;
+    rho = sphr.k * sqrt(epi/sphr.ep) .* r;
 end
 
-%% Input Check
-if l<m
-    rv = 0;
-	thetav = 0;
-    phiv = 0;
-    return
-end
 
 %% Coefficients
 
@@ -43,7 +49,7 @@ coefftheta =  -1*coeffang;
 coeffphi =  1i.*m.*coeffang;
 
 coeffsb = (l+1) .* SphericalHankelH1(l,rho) - rho .* SphericalHankelH1(l+1,rho);
-coeffsb = coeffsb.*SphericalBesselJ(l,sphr.k * sqrt(epiNL(l+1,n)/sphr.ep) .* sphr.a)./SphericalHankelH1(l,sphr.a);
+coeffsb = coeffsb.*SphericalBesselJ(l,sphr.k * sqrt(epi/sphr.ep) .* sphr.a)./SphericalHankelH1(l,sphr.a);
 %% calculation
  
 rv = coeff .* SphericalHankelH1(l,rho) * l * (l+1) ./ ylmcoeff .* legendrePlm(l,m,cos(th));

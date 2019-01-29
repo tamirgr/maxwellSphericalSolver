@@ -7,7 +7,12 @@ if l<m
     return
 end
 %% Init
-rho = sphr.k * sqrt(epiNL(l,n)/sphr.ep) .* r;
+if size(epiNL)>1
+    epi = epiNL(l+1,n);
+else
+    epi = epiNL;
+end
+rho = sphr.k * sqrt(epi/sphr.ep) .* r;
 ext = (r<=sphr.a);
 coeff = 1i*exp(1i.*m.*phi)./sqrt(l*(l+1)); % result of calculation with normalization coefficient for spherical bessel function
 plmcoeff = sqrt(4*pi/(2*l+1)*factorial(l+m)/factorial(l-m)); % normalization coefficient for associated legendre ploynomial

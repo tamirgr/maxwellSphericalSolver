@@ -3,6 +3,20 @@ function [rv, thetav, phiv] = curlFXlmPoint2(r, th, phi, epiNL, sphr,n,l,m)
 % X_lm in a secific coorediante given by r, th and phi.
 % alpha is the permittivity coefficient of the length r.
 
+%% Input Check
+if l<m
+    rv = 0;
+	thetav = 0;
+    phiv = 0;
+    return
+end
+
+if size(epiNL)>1
+    epi = epiNL(l+1,n);
+else
+    epi = epiNL;
+end
+
 %% Init
 if nargin < 5
     %sphr = SphereGeometry;
@@ -21,15 +35,7 @@ else
 %    alphar = sphr.k * (sphr.ep - epiNL) / sphr.ep * r;
 
 %     A = sqrt(sphr.a./r).*(~ext)./besselh(l+0.5,sphr.k*sphr.a).*besselh(l+0.5,sphr.k.*r) + ext;
-    rho = sphr.k * sqrt(epiNL(l+1,n)/sphr.ep) .* r;
-end
-
-%% Input Check
-if l<m
-    rv = 0;
-	thetav = 0;
-    phiv = 0;
-    return
+    rho = sphr.k * sqrt(epi/sphr.ep) .* r;
 end
 
 %% Coefficients

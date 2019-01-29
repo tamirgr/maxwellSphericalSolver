@@ -1,4 +1,4 @@
-function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
+function [ Ex, Ey, Ez ] = genTMField2( epsback, sphr, N, L, M, len, range)
 %genTEField - calculates the total field as described in the paper 'Generalizing normal mode expansion of electromagnetic Greens tensor to open systems'
 % specifially - equation 21.
 %   Ex, Ey, Ez - the eigenmodes of the system. |Em>
@@ -53,19 +53,16 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
     epiNL = zeros(L,N);
     for l=1:L
         sphr.orders = l-1;
-        epiNL(l,:) = disprootsepi2(sphr, N);
+        epiNL(l,:) = disprootsepi3(sphr, N);
     end
     
     EmTh = X*0;
     EmPhi = Y*0;
     EmR = Z*0;
     l = 1; %debug line
-%     epsi0 = real(epiNL(l+1,1));
-    epsi0 = epiNL(l+1,l)*0.9;
-    [ErZero,EthZero, EphiZero] = TEField(r,th,phi,sphr,epsi0,1,l,1); %calculate an eigenmode seperately for E0
-%     epsi01 = epiNL(l+1,1);
-%     [ErZero1,EthZero1, EphiZero1] = TEField(r,th,phi,sphr,epsi01,1,l,1); %calculate an eigenmode seperately for E0
-    [Era0,Etha0, Ephia0] = TEField(sphr.a,pi/2,0,sphr,epsi0,1,l,1); %calculate an eigenmode seperately for E0
+    epsi0 = real(epiNL(l+1,1));
+    [ErZero,EthZero, EphiZero] = TMField(r,th,phi,sphr,epsi0,1,l,1); %calculate an eigenmode seperately for E0
+    [Era0,Etha0, Ephia0] = TMField(sphr.a,pi/2,0,sphr,epsi0,1,l,1); %calculate the value of the field on sphere
 %     ErZero = real(ErZero);
 %     EthZero = real(EthZero);
 %     EphiZero = real(EphiZero);
@@ -73,8 +70,8 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
     for n=1:N
 %         for l=1:L
 %             for m=-l:l
-                [ER, ETh, EPhi] = TEField(r,th,phi,sphr,epiNL,n,l,m);
-                epco = (epsi0-epsback)/(epiNL(l,n)-epsi0); 
+                [ER, ETh, EPhi] = TMField(r,th,phi,sphr,epiNL,n,l,m);
+                epco = (epsi0-epsback)/(epiNL(l+1,n)-epsi0); 
                 EtR = ER.*internal + (1-internal)*Era0;
                 EtTh = ETh.*internal + (1-internal)*Etha0;
                 EtPhi = EPhi.*internal + (1-internal)*Ephia0;
@@ -93,12 +90,10 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
 	[Emx, Emy, Emz] =  mySph2cart(EmR,EmTh,EmPhi,th,phi);
     
     [ExZero,EyZero,EzZero] = mySph2cart(ErZero,EthZero,EphiZero,th,phi);
-%     [ExZero1,EyZero1,EzZero1] = mySph2cart(ErZero1,EthZero1,EphiZero1,th,phi);
 %     disp = [x(floor(len/3)),x(floor(len/3*2))];
     disp = [x(floor(len/2))];
-%     displayFields( real(ExZero1) , real(EyZero1) , real(EzZero1) ,X,Y,Z, 2,2,2,disp);
-
     displayFields( real(ExZero) , real(EyZero) , real(EzZero) ,X,Y,Z, 1,1,1,disp);
+
     sizefac = 1;%0*10^4;
     sizefac0 = 1;%0*10^4;
     Ex = ExZero*sizefac0 + 1i./sphr.k.*Emx.*sizefac; %|Em><Em|J> x-direction
