@@ -4,7 +4,7 @@ sphr =SphereGeometry;
 sphr.ep = 1; %sphr.mu = 1.0;
 
 % field properties
-sphr.k = 1.0; %sphr.beta = 0.0;
+sphr.k = 5.0; %sphr.beta = 0.0;
 
 % sphrinder properties
 sphr.a = 1.0;
@@ -13,15 +13,15 @@ sphr.a = 1.0;
 
 % sphrinder coordinates
 len = 40;
-range = 2;
+range = 3;
 sphr.x = 0.0; sphr.y = 0.0;
 sphr.z = 0.0;
 x = linspace(-range,range,len);
 y = linspace(-range,range,len);
 z = linspace(-range,range,len);
-l = 2; %l indx1
-n = 10; %n indx2
-m = 2; %m indx3
+l = 1; %l indx1
+n = 5; %n indx2
+m = 1; %m indx3
 sphr.ordersN = 20;
 %sphr.beta = 0.5;
 
@@ -35,10 +35,8 @@ th = pi/2 - th;
 % epsinc = sqrt(1.5);
 epsback = 1.0;
 
-[R,Th,Phi] = genTEField2(epsback, sphr, n, l, m, len, range);
-
-[ExRot,EyRot,EzRot] = mySph2cart(R,Th,Phi,th,phi);
-    
+[ExRot,EyRot,EzRot] = genTEField2(epsback, sphr, n, l, m, len, range);
+   
 ExR = real(ExRot);
 EyR = real(EyRot);
 EzR = real(EzRot);
