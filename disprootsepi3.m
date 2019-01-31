@@ -21,15 +21,31 @@ function [roots, epis, cen, rad] = disprootsepi3(sphr, nroots)
 ncntrs = ceil(nroots);
 
 % get zero of J, corresponds to kperpi*a
-jzero = besselzero(sphr.orders, max(4, ncntrs+1));
+jzero = besselzero(sphr.orders+0.5, max(4, ncntrs+1));
 % calculate corresponding epsilon
 %epis = ((jzero./sphr.a).^2 + sphr.beta.^2)./sphr.k.^2./sphr.mui;
-epis = [0 (jzero./sphr.k./sphr.a).^2];
+epis = jzero;
 % find plasmonic root
 trustr = realmax;
 %kperp = sqrt(sphr.k.^2.*sphr.ep.*sphr.mu - sphr.beta.^2); %alpha c
 kperp = sphr.k * sqrt(sphr.ep);
-proot = [];
+%proot = [];
+
+%roots = apm(@sphrdispepinewtTM, 0, pi/2, 1, 0, 2, proot, 1e-5, sphr);
+%roots = sort(roots);
+
+
+% return two roots
+%if(length(roots)>0)
+if(sphr.orders ==0)
+    alpha =pi/4*exp(-sphr.k*sphr.a/2);
+else
+     alpha =pi/2;%*exp(-sphr.k*sphr.a/2);
+end
+proot(1:2) = newton(@sphrdispepinewtTM, [exp((pi-alpha)*1i)*sqrt(sphr.k*sphr.a),exp(-alpha*1i)*sqrt(sphr.k*sphr.a)], trustr, sphr); %roots(1:2)
+%roots(2) = newton(@sphrdispepinewtTM, , trustr, sphr);
+%end
+
 
 
 
@@ -39,10 +55,11 @@ proot = [];
 % recalculate number of contours necessary
 ncntrs = nroots; %ceil((nroots-length(proot)));
 droots = zeros([1 ncntrs]);
+droots(1:2) = proot;
 
 % root search by contours centered on singularities
-for k = 1:ncntrs
-  droots(k) = search(sphr, epis, [proot droots(1:k-1)], cen(k), rad(k));
+for k = 3:ncntrs
+  droots(k) = search(sphr, epis,  droots(1:k-1), cen(k), rad(k));
 end
 
 % check for reality
@@ -60,11 +77,11 @@ roots = roots(1:nroots);
 
 function [rad, cen] = contours(sings, proot)
 % lower boundary is 3/4 distance to next lower singularity 
-dz = diff( abs(sings));
+dz = diff([0 abs(sings)]);
   
 
-cen =  [0 sings(2:end) - 1i*dz/3];
-rad = [dz(1)/2 dz/2];
+cen =  sings;
+rad = dz/3;
 
 function roots = search(sphr, sing, proot, cen, rad)
 % course contour parameters
@@ -79,7 +96,7 @@ fconsize = 1.5;
 % newton-raphson parameters
 trustr = 5;
 
-% detect if known roots are close to contour
+ % detect if known roots are close to contour
 % use only after first contour
 if length(proot) > 1
   nearc = abs(abs(cen-proot)-rad) < conbuffer;
@@ -108,13 +125,13 @@ proots = proot(incp);
 
 % large course contour to include at least two roots
 phi = 0; obl = 1;
-roots = apm(@sphrdispepinewt16, cen, rad, obl, phi, sings, proots, crstol, sphr);
+roots = apm(@sphrdispepinewtTM, cen, rad, obl, phi, sings, proots, crstol, sphr);
 roots = sort(roots);
 
 
 % return two roots
 if(length(roots)>0)
-roots(1) = newton(@sphrdispepinewt16, roots(1), trustr, sphr); %roots(1:2);
+roots(1) = newton(@sphrdispepinewtTM, roots(1), trustr, sphr); %roots(1:2);
 else
     roots
 end
