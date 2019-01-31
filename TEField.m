@@ -26,7 +26,7 @@ Phi = -1*coeff./plmcoeff.*(...
     +legendrePlm(l,m+1,cos(th))...
     ).*normce;
 
-xnl = sphr.k * sphr.a * sqrt(epiNL(l,n)/sphr.ep); % 
+xnl = sphr.k * sphr.a * sqrt(epi/sphr.ep); % 
 coeffJH = SphericalBesselJ(l,xnl)/SphericalHankelH1(l,sphr.k*sphr.a);
 
 spbj = SphericalBesselJ(l,rho);
