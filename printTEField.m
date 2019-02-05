@@ -12,7 +12,7 @@ sphr.a = 1.0;
 %sphr.mu = 2;
 
 % sphrinder coordinates
-len = 40;
+len = 60;
 range = 3;
 sphr.x = 0.0; sphr.y = 0.0;
 sphr.z = 0.0;
@@ -43,4 +43,4 @@ EzR = real(EzRot);
 
 dispx = [x(floor(len/2))];
     
-displayFields( ExR , EyR , EzR ,X,Y,Z, n,l,m,dispx);
+displayFields( ExR , EyR , EzR ,X,Y,Z, n,l,m,dispx,3);

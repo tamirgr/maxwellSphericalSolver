@@ -45,10 +45,6 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
     [X,Y,Z] = meshgrid(x,y,z);
     [phi,th,r] = cart2sph(X,Y,Z);
     th = pi/2 - th;
-    internal = (r<=sphr.a);
-    tmp = (1-internal)*sphr.a^3*4*pi/3;
-    integmat = tmp + internal.*r.^3*4*pi/3;
-    integmatCart = mySph2cart(integmat,0,0,th,phi);
     %% Calculate Eigenmodes and Eigenvalues
 
     epiNL = zeros(L,N);
@@ -75,11 +71,11 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
                 
                 epco = (epsi0-epsback)/(epiNL(l+1,n)-epsi0); % epsilon coefficient
                 
-                eigenco = conj(EX).*ExZero + conj(EY).*EyZero + conj(EZ).*EzZero;
+                eigenco = integrateJ2R2(l, sphr.a, epsi0, epiNL(l+1,n));
                 
-                Emx = EX.*epco.*eigenco.*integmatCart;
-                Emy = EY.*epco.*eigenco.*integmatCart;
-                Emz = EZ.*epco.*eigenco.*integmatCart;
+                Emx = EX.*epco.*eigenco;
+                Emy = EY.*epco.*eigenco;
+                Emz = EZ.*epco.*eigenco;
 %             end
 %         end
     end
@@ -94,7 +90,7 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
     [E1R,E1TH, E1PHI] = TEField(r,th,phi,sphr,epiNL(2,1),1,1,1); %calculate an eigenmode seperately for E0
     [Ex1,Ey1,Ez1] = mySph2cart(E1R,E1TH, E1PHI,th,phi);
     disp = [x(floor(len/2))];
-    displayFields( real(Ex1) , real(Ey1) , real(Ez1) ,X,Y,Z, 1,1,1,disp);
+    displayFields( real(Ex1) , real(Ey1) , real(Ez1) ,X,Y,Z, 1,1,1,disp,1);
 
     sizefac = 1;%0*10^4;
     sizefac0 = 1;%0*10^4;
