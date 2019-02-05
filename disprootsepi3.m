@@ -38,12 +38,16 @@ kperp = sphr.k * sqrt(sphr.ep);
 % return two roots
 %if(length(roots)>0)
 if(sphr.orders ==0)
-    alpha =pi/4*exp(-sphr.k*sphr.a/2);
+    alpha = pi/4*exp(-sphr.k*sphr.a/2);
 else
-     alpha =pi/2;%*exp(-sphr.k*sphr.a/2);
+     alpha = pi/2*exp(-sphr.k*sphr.a/2);
 end
-proot(1:2) = newton(@sphrdispepinewtTM, [exp((pi-alpha)*1i)*sqrt(sphr.k*sphr.a),exp(-alpha*1i)*sqrt(sphr.k*sphr.a)], trustr, sphr); %roots(1:2)
-%roots(2) = newton(@sphrdispepinewtTM, , trustr, sphr);
+if(sphr.a*sphr.k<=1)
+    proot(1:2) = newton(@sphrdispepinewtTM, [exp((pi-alpha)*1i)*sphr.k*sphr.a,exp(-alpha*1i)*sphr.k*sphr.a], trustr, sphr); %roots(1:2)
+else
+    proot(1:2) = newton(@sphrdispepinewtTM, [exp((pi-alpha)*1i)*3,exp(-alpha*1i)*3], trustr, sphr); %roots(1:2)
+end
+    %roots(2) = newton(@sphrdispepinewtTM, , trustr, sphr);
 %end
 
 
@@ -55,10 +59,10 @@ proot(1:2) = newton(@sphrdispepinewtTM, [exp((pi-alpha)*1i)*sqrt(sphr.k*sphr.a),
 % recalculate number of contours necessary
 ncntrs = nroots; %ceil((nroots-length(proot)));
 droots = zeros([1 ncntrs]);
-droots(1:2) = proot;
+droots(1) = proot(2);
 
 % root search by contours centered on singularities
-for k = 3:ncntrs
+for k = 2:ncntrs
   droots(k) = search(sphr, epis,  droots(1:k-1), cen(k), rad(k));
 end
 
