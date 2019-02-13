@@ -1,14 +1,15 @@
-function [a,b,c,d]=calcCoeff(sphr,epiNL,n,l)
-    m = sqrt(epiNL(1:l,n));
+function [a,b,c,d]=calcCoeff(sphr,mu,l)
+    m = abs(transpose(mu(1:l))).^2;
     x = sphr.k.*sphr.a*ones(l,1);
     meu0 = sphr.ep;
-    meu1 = sqrt(1.5);
+    meu1 = mu(l);
     tmp1 = meu0*m.^2; 
-    a = (tmp1.*pJJ(m.*x,x,transpose(1:l)) - meu1*pJJ(x,m.*x,transpose(1:l)))./(tmp1.*pJH(x,m.*x,transpose(1:l)) - meu1*pHJ(x,m.*x,transpose(1:l))); 
-    b = (meu1.*pJJ(m.*x,x,transpose(1:l)) - meu0.*pJJ(x,m.*x,transpose(1:l)))./(meu1.*pJH(x,m.*x,transpose(1:l)) - meu0.*pHJ(x,m.*x,transpose(1:l))); 
+    a = (tmp1.*pJJ(m.*x,x,transpose(1:l)) - m.*meu1.*pJJ(x,m.*x,transpose(1:l)))./(tmp1.*pJH(x,m.*x,transpose(1:l)) - meu1.*m.*pHJ(x,m.*x,transpose(1:l))); 
+    b = (meu1.*pJJ(m.*x,x,transpose(1:l)) - meu0.*pJJ(x,m.*x,transpose(1:l)))./(meu1.*pJH(x,m.*x,transpose(1:l)) - meu0.*m.*pHJ(x,m.*x,transpose(1:l))); 
     
-    c = (meu1.*pJH(x,x,transpose(1:l)) - meu1.*pHJ(x,x,transpose(1:l)))./(meu1.*pJH(x,m.*x,transpose(1:l)) - meu0.*pHJ(x,m.*x,transpose(1:l))); 
-    d = (meu1.*m.*pJH(x,x,transpose(1:l)) - meu1.*m.*pHJ(x,x,transpose(1:l)))./(meu0.*m.^2.*pJH(x,m.*x,transpose(1:l)) - meu1.*pHJ(x,m.*x,transpose(1:l))); 
+    c = (meu1.*pJH(x,x,transpose(1:l)) - meu1.*pHJ(x,x,transpose(1:l)))./(meu1.*pJH(x,m.*x,transpose(1:l)) - meu0*m.*pHJ(x,m.*x,transpose(1:l))); 
+    d = (meu1.*m.*pJH(x,x,transpose(1:l)) - meu1.*m.*pHJ(x,x,transpose(1:l)))./(tmp1.*pJH(x,m.*x,transpose(1:l)) - meu1.*m.*pHJ(x,m.*x,transpose(1:l))); 
+
 
 end
 
