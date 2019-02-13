@@ -34,9 +34,13 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
         sphr.ordersN = N;
         
         epsback = 1.0;
+        
+        E0 = 1.0;
     else
     %% Debug Parameters (Delete section when finished
         m = M;
+%         n = N;
+        E0 = 1.0;
     end
     
     x = linspace(-range,range,len);
@@ -58,10 +62,11 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
     Emz = Z*0;
     l = L; %debug line
 %     epsi0 = real(epiNL(l+1,1));
-    epsi0 = epiNL(l+1,l)*0.9;
+    epsi0 = sqrt(1.5);
 %     epsi0 = 20;
-    [ErZero,EthZero, EphiZero] = TEField(r,th,phi,sphr,epsi0,1,l,1); %calculate an eigenmode seperately for E0
-    [ExZero,EyZero,EzZero] = mySph2cart(ErZero,EthZero,EphiZero,th,phi);
+%     [ErZero,EthZero, EphiZero] = TEField(r,th,phi,sphr,epsi0,1,l,1); %calculate an eigenmode seperately for E0
+%     [ExZero,EyZero,EzZero] = mySph2cart(ErZero,EthZero,EphiZero,th,phi);
+    [ExZero,EyZero,EzZero] = genWave(len, range, 'x plane polarized', E0, 0,  sphr.k);
     
     for n=1:N
 %         for l=1:L
@@ -71,11 +76,10 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
                 
                 epco = (epsi0-epsback)/(epiNL(l+1,n)-epsi0); % epsilon coefficient
                 
-                eigenco = integrateJ2R2(l, sphr.a, epsi0, epiNL(l+1,n));
-                
-                Emx = EX.*epco.*eigenco;
-                Emy = EY.*epco.*eigenco;
-                Emz = EZ.*epco.*eigenco;
+                eigenco = planeWaveTE( E0, l, sphr.a ,sphr.k.*epsi0, sphr.k.*sqrt(epiNL(l+1,n)));
+                Emx = Emx + EX.*epco.*eigenco;
+                Emy = Emy + EY.*epco.*eigenco;
+                Emz = Emz + EZ.*epco.*eigenco;
 %             end
 %         end
     end
@@ -87,13 +91,13 @@ function [ Ex, Ey, Ez ] = genTEField2( epsback, sphr, N, L, M, len, range)
 %     [ExZero1,EyZero1,EzZero1] = mySph2cart(ErZero1,EthZero1,EphiZero1,th,phi);
 %     disp = [x(floor(len/3)),x(floor(len/3*2))];
 %     displayFields( real(ExZero1) , real(EyZero1) , real(EzZero1) ,X,Y,Z, 2,2,2,disp);
-    [E1R,E1TH, E1PHI] = TEField(r,th,phi,sphr,epiNL(2,1),1,1,1); %calculate an eigenmode seperately for E0
-    [Ex1,Ey1,Ez1] = mySph2cart(E1R,E1TH, E1PHI,th,phi);
-    disp = [x(floor(len/2))];
-    displayFields( real(Ex1) , real(Ey1) , real(Ez1) ,X,Y,Z, 1,1,1,disp,1);
+%     [E1R,E1TH, E1PHI] = TEField(r,th,phi,sphr,epiNL(2,1),1,1,1); %calculate an eigenmode seperately for E0
+%     [Ex1,Ey1,Ez1] = mySph2cart(E1R,E1TH, E1PHI,th,phi);
+%     disp = [x(floor(len/2))];
+%     displayFields( real(Ex1) , real(Ey1) , real(Ez1) ,X,Y,Z, 1,1,1,disp,1,0);
 
     sizefac = 1;%0*10^4;
-    sizefac0 = 1;%0*10^4;
+    sizefac0 = 0;%0*10^4;
     Ex = ExZero*sizefac0 + 1i./sphr.k.*Emx.*sizefac; %|Em><Em|J> x-direction
     Ey = EyZero*sizefac0 + 1i./sphr.k.*Emy.*sizefac; %|Em><Em|J> y-direction
     Ez = EzZero*sizefac0 + 1i./sphr.k.*Emz.*sizefac; %|Em><Em|J> z-direction

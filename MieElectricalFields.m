@@ -1,4 +1,4 @@
-function [Ex,Ey,Ez,Hx,Hy,Hz] = MieElectricalFields(x, y, z,indx1,indx2,indx3,E0r,E0th,E0phi,H0r,H0th,H0phi)
+function [Ex,Ey,Ez,Hx,Hy,Hz] = MieElectricalFields(sphr, x, y, z,indx1,indx2,indx3,E0r,E0th,E0phi,H0r,H0th,H0phi, mu)
 
 if nargin < 3
         sphr =SphereGeometry;
@@ -53,7 +53,10 @@ if nargin < 3
     [X,Y,Z] = meshgrid(x,y,z);
     [phi,th,r] = cart2sph(X,Y,Z);
 end
-    close all;
+%     close all;
+Hx = 0;
+Hy = 0;
+Hz = 0;
 th = pi/2 -th;
    EiR = zeros(size(r));
    EiTh = zeros(size(th));
@@ -92,16 +95,16 @@ th = pi/2 -th;
      %   HiTh = -1i*sphr.k*exp(1i*sphr.k*r.*sin(th)).*cos(th).*sin(phi);
      %   HiPhi = 1i*sphr.k *exp(1i*sphr.k*r.*sin(th)).*cos(phi);
    
-        [Mr,Mth,Mphi] = MOField(r,th,phi,sphr,mu,n,l,indx3);
-        [Nr,Nth,Nphi] = NEField(r,th,phi,sphr,mu,n,l,indx3);
+        [Mr,Mth,Mphi] = MOField(r,th,phi,sphr,mu(1,1),l,indx3);
+        [Nr,Nth,Nphi] = NEField(r,th,phi,sphr,mu(1,1),l,indx3);
         %[EiR,EiTh,EiPhi] = EiField(l,EiR,EiTh,EiPhi,E0r,E0th,E0phi,ones(1,indx1),ones(1,indx1),Mr,Mth,Mphi,Nr,Nth,Nphi);
         
         [ELR,ELTh,ELPhi] = EiField(l,ELR,ELTh,ELPhi,E0r,E0th,E0phi,c,d,Mr,Mth,Mphi,Nr,Nth,Nphi);
         
         [ESR,ESTh,ESPhi] = EiField(l,ESR,ESTh,ESPhi,E0r,E0th,E0phi,-b,-a,Mr,Mth,Mphi,Nr,Nth,Nphi);
     
-       % [Mr,Mth,Mphi] = MEField(r,th,phi,sphr,mu,indx2,l,indx3);
-       % [Nr,Nth,Nphi] = NOField(r,th,phi,sphr,mu,indx2,l,indx3);
+       % [Mr,Mth,Mphi] = MEField(r,th,phi,sphr,mu,l,indx3);
+       % [Nr,Nth,Nphi] = NOField(r,th,phi,sphr,mu,l,indx3);
         
           % [HiR,HiTh,HiPhi] = HiField(sphr,epiNL1,indx2,l,HiR,HiTh,HiPhi,H0r,H0th,H0phi,ones(1,indx1),ones(1,indx1),Mr,Mth,Mphi,Nr,Nth,Nphi);
       %[HLR,HLTh,HLPhi] = HiField(sphr,mu,indx2,l,HLR,HLTh,HLPhi,H0r,H0th,H0phi,d,c,Mr,Mth,Mphi,Nr,Nth,Nphi);
@@ -109,7 +112,7 @@ th = pi/2 -th;
        %   [HSR,HSTh,HSPhi] = HiField(sphr,mu,indx2,l,HSR,HSTh,HSPhi,H0r,H0th,H0phi,-a,-b,Mr,Mth,Mphi,Nr,Nth,Nphi);
        
    %end
-   ext = r>sphr.a;
+   ext = (r<=sphr.a);
   %[Ex,Ey,Ez] = mySph2cart( EiR ,(EiTh ) ,(EiPhi ) ,th,phi);
   
    [Ex,Ey,Ez] = mySph2cart((ESR ).*(~ext) + ext.*ELR,(ESTh ).*(~ext) + ext.*ELTh,(ESPhi ).*(~ext) + ext.*ELPhi,th,phi);
@@ -118,47 +121,18 @@ th = pi/2 -th;
     ExR = real(Ex);
      EyR = real(Ey);
      EzR = real(Ez);
-     
-    figure(1);
-    slice(X,Y,Z,ExR,x(len/2),x(len/2),x(len/2)+0.1);
-    %slice(X,Y,Z,ExR,dispx,dispx,dispx);
-    colorbar();
-    xlabel('x');
-    ylabel('y');
-    zlabel('z');
-    %caxis([-10,10]);
-    shading interp
-    title(sprintf('ExReal n=%d, l=%d, m=%d',indx2,indx1,indx3));
-    saveas(1,sprintf('sliceExRealn%dl%dm%d.jpeg',indx2,indx1,indx3));
-    saveas(1,sprintf('sliceExRealn%dl%dm%d.fig',indx2,indx1,indx3));
+
+% dispx = [x(floor(len/2))];
+% displayFields( ExR , EyR , EzR ,X,Y,Z, n,l,indx3,dispx,1, 0);
+%     saveas(1,sprintf('sliceExRealn%dl%dm%d.jpeg',indx2,indx1,indx3));
+%     saveas(1,sprintf('sliceExRealn%dl%dm%d.fig',indx2,indx1,indx3));
     
-     
-    figure(2);
-    slice(X,Y,Z,EyR,x(len/2),x(len/2),x(len/2));
-    %slice(X,Y,Z,EyR,dispx,dispx,x(len/2));
-    shading interp
-    colorbar();
-        xlabel('x');
-    ylabel('y');
-    zlabel('z');
-   % caxis([-10,10]);
-    title(sprintf('EyReal n=%d, l=%d, m=%d',indx2,indx1,indx3));
-    saveas(2,sprintf('sliceEyRealn%dl%dm%d.jpeg',indx2,indx1,indx3));
-    saveas(2,sprintf('sliceEyRealn%dl%dm%d.fig',indx2,indx1,indx3));
-    %slice(X,Y,Z,Ey,[-1,0,1],0,-1);
-    figure(3);
-    slice(X,Y,Z,EzR,x(len/2),x(len/2),x(len/2));
-    %slice(X,Y,Z,EzR,dispx,dispx,x(len/2));
-        xlabel('x');
-    ylabel('y');
-    zlabel('z');
-    colorbar();
-   % caxis([-10,10]);
-    shading interp
-    title(sprintf('EzReal n=%d, l=%d, m=%d',indx2,indx1,indx3));
-    saveas(3,sprintf('sliceEzRealn%dl%dm%d.jpeg',indx2,indx1,indx3));
-    saveas(3,sprintf('sliceEzRealn%dl%dm%d.fig',indx2,indx1,indx3));
-    
+%     saveas(2,sprintf('sliceEyRealn%dl%dm%d.jpeg',indx2,indx1,indx3));
+%     saveas(2,sprintf('sliceEyRealn%dl%dm%d.fig',indx2,indx1,indx3));
+% 
+%     saveas(3,sprintf('sliceEzRealn%dl%dm%d.jpeg',indx2,indx1,indx3));
+%     saveas(3,sprintf('sliceEzRealn%dl%dm%d.fig',indx2,indx1,indx3));
+%     
 %       HxR = real(Hx);
 %      HyR = real(Hy);
 %      HzR = real(Hz);
