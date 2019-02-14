@@ -12,8 +12,8 @@ sphr.a = 1.0;
 %sphr.mu = 2;
 
 % sphrinder coordinates
-len = 60;
-range = 2;
+len = 50;
+range = 4;
 sphr.x = 0.0; sphr.y = 0.0;
 sphr.z = 0.0;
 x = linspace(-range,range,len);
