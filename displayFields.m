@@ -1,6 +1,8 @@
-function displayFields( F1 , F2 , F3 ,X,Y,Z, n,l,m,disp, level)
+function displayFields( F1 , F2 , F3 ,X,Y,Z, n,l,m,disp, level, limit)
  
-axval = 6;
+if limit
+    axval = 6;
+end
 
 if max(F1)
     figure;
@@ -8,7 +10,9 @@ if max(F1)
     slice(X,Y,Z,F1,disp,disp,disp);
     colorbar();
     shading interp
-    caxis([-axval    axval]);
+    if limit
+        caxis([-axval    axval]);
+    end
     title(sprintf('ExReal n=%d, l=%d, m=%d',n,l,m));
     switch level
         case 1
@@ -26,7 +30,9 @@ if max(F2)
     slice(X,Y,Z,F2,disp,disp,disp);
     colorbar();
     shading interp
+    if limit
         caxis([-axval    axval]);
+    end
     title(sprintf('EyReal n=%d, l=%d, m=%d',n,l,m));
     switch level
         case 1
@@ -44,7 +50,9 @@ colormap('jet');
 slice(X,Y,Z,F3,disp,disp,disp);
 colorbar();
 shading interp
+if limit
     caxis([-axval    axval]);
+end
 title(sprintf('EzReal n=%d, l=%d, m=%d',n,l,m));
     switch level
         case 1
