@@ -61,7 +61,7 @@ th = pi/2 -th;
    EiR = zeros(size(r));
    EiTh = zeros(size(th));
    EiPhi = zeros(size(phi));
-   
+ 
    %HiR = zeros(size(r));
   % HiTh = zeros(size(th));
   % HiPhi = zeros(size(phi));
@@ -97,7 +97,7 @@ th = pi/2 -th;
    
         [Mr,Mth,Mphi] = MOField(r,th,phi,sphr,mu(1,1),l,indx3);
         [Nr,Nth,Nphi] = NEField(r,th,phi,sphr,mu(1,1),l,indx3);
-        %[EiR,EiTh,EiPhi] = EiField(l,EiR,EiTh,EiPhi,E0r,E0th,E0phi,ones(1,indx1),ones(1,indx1),Mr,Mth,Mphi,Nr,Nth,Nphi);
+        [EiR,EiTh,EiPhi] = EiField(l,EiR,EiTh,EiPhi,E0r,E0th,E0phi,ones(1,indx1),ones(1,indx1),Mr,Mth,Mphi,Nr,Nth,Nphi);
         
         [ELR,ELTh,ELPhi] = EiField(l,ELR,ELTh,ELPhi,E0r,E0th,E0phi,c,d,Mr,Mth,Mphi,Nr,Nth,Nphi);
         
@@ -112,11 +112,11 @@ th = pi/2 -th;
        %   [HSR,HSTh,HSPhi] = HiField(sphr,mu,indx2,l,HSR,HSTh,HSPhi,H0r,H0th,H0phi,-a,-b,Mr,Mth,Mphi,Nr,Nth,Nphi);
        
    %end
-   ext = (r<=sphr.a);
+   ext = (r>sphr.a);
   %[Ex,Ey,Ez] = mySph2cart( EiR ,(EiTh ) ,(EiPhi ) ,th,phi);
-  
-   [Ex,Ey,Ez] = mySph2cart((ESR ).*(~ext) + ext.*ELR,(ESTh ).*(~ext) + ext.*ELTh,(ESPhi ).*(~ext) + ext.*ELPhi,th,phi);
-%   [Hx,Hy,Hz] = mySph2cart((HSR + HiR).*(1-ext) + ext.*HLR,(HSTh + HiTh).*(1-ext) + ext.*HLTh,(HSPhi + HiPhi).*(1-ext) + ext.*HLPhi,th,phi);
+  fact = 1;
+   [Ex,Ey,Ez] = mySph2cart((ESR + fact*EiR).*(ext) + (~ext).*ELR,(ESTh + fact*EiTh).*(ext) + (~ext).*ELTh,(ESPhi +fact*EiPhi).*(ext) + (~ext).*ELPhi,th,phi);
+%  [Hx,Hy,Hz] = mySph2cart((HSR + HiR).*(ext) + (~ext).*HLR,(HSTh + HiTh).*(ext) + (~ext).*HLTh,(HSPhi + HiPhi).*(ext) + (~ext).*HLPhi,th,phi);
    
     ExR = real(Ex);
      EyR = real(Ey);

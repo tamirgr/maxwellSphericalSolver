@@ -30,7 +30,8 @@ xnl = sphr.k * sphr.a * sqrt(epi/sphr.ep); %
 coeffJH = SphericalBesselJ(l,xnl)/SphericalHankelH1(l,sphr.k*sphr.a);
 
 spbj = SphericalBesselJ(l,rho);
-sph1 = SphericalHankelH1(l,rho);
+sph1 = SphericalHankelH1(l,sphr.k.*r);
+%sph1 = SphericalHankelH1(l,rho);
 
 %% Result
 Th  = Th.*spbj.*ext  + coeffJH*Th.*sph1.*(~ext);
