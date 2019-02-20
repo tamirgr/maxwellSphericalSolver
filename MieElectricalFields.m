@@ -22,7 +22,7 @@ if nargin < 3
         x = linspace(-range,range,len);
         y = linspace(-range,range,len);
         z = linspace(-range,range,len);
-        indx1 = 2; %l
+        indx1 = 5; %l
         indx2 = 3; %n
         indx3 = 1; %m
         type = 1;
@@ -83,9 +83,10 @@ th = pi/2 -th;
    %HSPhi = zeros(size(phi));
    
    [a,b,c,d] = calcCoeff(sphr,mu,indx1); 
-   %for l = 1:indx1
-    l = indx1;
-    n = indx2;
+  %n = indx2;
+   for l = 1:indx1
+  %  l = indx1;
+    
    % for n = 1:indx2
     %    EiR = exp(1i*sphr.k*r.*cos(th)).*sin(th).*cos(phi);
     %    EiTh = exp(1i*sphr.k*r.*cos(th)).*cos(th).*cos(phi);
@@ -111,16 +112,16 @@ th = pi/2 -th;
     
        %   [HSR,HSTh,HSPhi] = HiField(sphr,mu,indx2,l,HSR,HSTh,HSPhi,H0r,H0th,H0phi,-a,-b,Mr,Mth,Mphi,Nr,Nth,Nphi);
        
-   %end
+   end
    ext = (r>sphr.a);
-  %[Ex,Ey,Ez] = mySph2cart( EiR ,(EiTh ) ,(EiPhi ) ,th,phi);
+  [Ex,Ey,Ez] = mySph2cart( EiR ,(EiTh ) ,(EiPhi ) ,th,phi);
   fact = 1;
-   [Ex,Ey,Ez] = mySph2cart((ESR + fact*EiR).*(ext) + (~ext).*ELR,(ESTh + fact*EiTh).*(ext) + (~ext).*ELTh,(ESPhi +fact*EiPhi).*(ext) + (~ext).*ELPhi,th,phi);
+  % [Ex,Ey,Ez] = mySph2cart((ESR + fact*EiR).*(ext) + (~ext).*ELR,(ESTh + fact*EiTh).*(ext) + (~ext).*ELTh,(ESPhi +fact*EiPhi).*(ext) + (~ext).*ELPhi,th,phi);
 %  [Hx,Hy,Hz] = mySph2cart((HSR + HiR).*(ext) + (~ext).*HLR,(HSTh + HiTh).*(ext) + (~ext).*HLTh,(HSPhi + HiPhi).*(ext) + (~ext).*HLPhi,th,phi);
    
-    ExR = real(Ex);
-     EyR = real(Ey);
-     EzR = real(Ez);
+%     ExR = real(Ex);
+%      EyR = real(Ey);
+%      EzR = real(Ez);
 
 % dispx = [x(floor(len/2))];
 % displayFields( ExR , EyR , EzR ,X,Y,Z, n,l,indx3,dispx,1, 0);
