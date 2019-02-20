@@ -12,47 +12,39 @@ sphr.a = 1.0;
 %sphr.mu = 2;
 
 % sphrinder coordinates
-len = 40;
-range = 2;
+len = 50;
+range = 4;
 sphr.x = 0.0; sphr.y = 0.0;
 sphr.z = 0.0;
 x = linspace(-range,range,len);
 y = linspace(-range,range,len);
 z = linspace(-range,range,len);
-l = 3; %l indx1 relative position in epiNL. subtract 1 for non-epiNL use.
-n = 3; %n indx2
-m = 0; %m indx3
+l = 2; %l indx1
+n = 20; %n indx2
+m = 1; %m indx3
 sphr.ordersN = 20;
 %sphr.beta = 0.5;
+mu = ones(l+1,n)*(sqrt(1.5));
 
-sphr.orders = l-1; 
+sphr.orders = l; 
 [X,Y,Z] = meshgrid(x,y,z);
 [phi,th,r] = cart2sph(X,Y,Z);
 th = pi/2 - th;
 
-% [R,Th,Phi] = TMField(r,th,phi,sphr,epiNL2,n,l,m);
-% [Jx, Jy, Jz] = genWave(len, range, 'x plane polarized', 1.0, 0, sphr.k);
+% [R,Th,Phi] = TEField(r,th,phi,sphr,epiNL2,n,l,m);
+% [Jx, Jy, Jz] = genWave(len, range, 'x plane polarized', 1.0, 0.0, sphr.k);
 % epsinc = sqrt(1.5);
 epsback = 1.0;
+close all
+[HxRot,HyRot,HzRot] = genTMField2(epsback, sphr, n, l, m, len, range);
+   
+HxR = real(HxRot);
+HyR = real(HyRot);
+HzR = real(HzRot);
 
-[R,Th,Phi] = genTMField2( epsback, sphr, sphr.ordersN, l, m, len, range);
-[ExRot,EyRot,EzRot] = mySph2cart(R,Th,Phi,th,phi);
-
-ExR = real(ExRot);
-EyR = real(EyRot);
-EzR = real(EzRot);
-     
-% dispx = [x(floor(len/3)),x(floor(len/3*2))];
 dispx = [x(floor(len/2))];
+    
+displayFields( HxR , HyR , HzR ,X,Y,Z, n,l,m,dispx,1, 0);
 
-displayFields( ExR , EyR , EzR ,X,Y,Z, n,l,m,dispx);    
-% 
-% figure;
-% colormap('jet');
-% slice(X,Y,Z,ExR,dispx,dispx,dispx);
-% colorbar();
-% shading interp
-% % caxis([-abs(max(max(max(ExR))))    abs(max(max(max(ExR))))]);
-% % caxis([-1    1]*1*10^-6);
-% title(sprintf('ExReal n=%d, l=%d, m=%d',n,l,m));
-% % alpha(0.5);
+% [Ex,Ey,Ez,Hx,Hy,Hz] = MieElectricalFields(sphr, x, y, z,l,n,m,ones(size(r)),ones(size(r)),ones(size(r)),0,0,0,mu);
+% displayFields( real(Ex) , real(Ey) , real(Ez) ,X,Y,Z, n,l,m,dispx,3, 0);

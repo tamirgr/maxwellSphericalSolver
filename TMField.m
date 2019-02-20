@@ -7,7 +7,7 @@ if l<m
 	return
 end
 %% Init
-ext = (r<=sphr.a);
+int = (r<=sphr.a);
 if size(epiNL)>1
     epi = epiNL(l+1,n);
 else
@@ -21,7 +21,7 @@ normce = normalizationCoeffCalc(l,sphr,rho,'M');
 [resRIn,resThIn,resPhiIn] = curlFXlmPoint2(r,th,phi,epiNL,sphr,n,l,m);
 [resROut,resThOut,resPhiOut] = curlFXlmPointHenkel2(r,th,phi,epiNL,sphr,n,l,m);    
 %% Result
-R   = 1i/sphr.k*(ext.*resRIn/epi*sphr.ep   + coeffJH*(~ext).*resROut).*normce;
-Th  = 1i/sphr.k*(ext.*resThIn/epi*sphr.ep  + coeffJH*(~ext).*resThOut).*normce;
-Phi = 1i/sphr.k*(ext.*resPhiIn/epi*sphr.ep + coeffJH*(~ext).*resPhiOut).*normce;
+R   = 1i/sphr.k*(int.*resRIn/epi*sphr.ep   + coeffJH*(~int).*resROut).*normce;
+Th  = 1i/sphr.k*(int.*resThIn/epi*sphr.ep  + coeffJH*(~int).*resThOut).*normce;
+Phi = 1i/sphr.k*(int.*resPhiIn/epi*sphr.ep + coeffJH*(~int).*resPhiOut).*normce;
 end
